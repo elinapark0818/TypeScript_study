@@ -366,6 +366,7 @@ let removeDash: RemoveDash = function (x) {
   return Number(result);
 };
 
+// * 숙제3 내가 끄적끄적..
 function 숙제3함수파라미터넣기(
   x: string,
   cutZero: Function,
@@ -377,6 +378,282 @@ function 숙제3함수파라미터넣기(
 }
 
 숙제3함수파라미터넣기("010-1234-5678", cutZero, removeDash);
+
+// * 숙제3 답안
+type 함수타입1 = (x: string) => string;
+type 함수타입2 = (x: string) => number;
+
+function 만들함수(x: string, func1: 함수타입1, func2: 함수타입2) {
+  let result = func1(x);
+  let result2 = func2(result);
+  console.log(result2);
+}
+
+만들함수("123", cutZero, removeDash);
+
+// * HTML
+
+let 제목 = document.querySelector("#title");
+// if (제목 != null) {
+//   제목.innerHTML = "반갑다";
+// }
+
+if (제목 instanceof HTMLElement) {
+  제목.innerHTML = "반갑다";
+}
+// console.log(제목);
+
+// ! 100% 확신할때 . 왠만하면 쓰지말자
+// let 부제목 = document.querySelector("#subtitle") as Element;
+// 부제목.innerHTML = "하이루";
+
+// * innerHTML이 있으면 출력하고 없으면 undefined 뱉어라.
+// * 오브젝트에 ? 붙이기. (신문법)
+let 부제목 = document.querySelector("#subtitle");
+if (부제목?.innerHTML !== undefined) {
+  부제목.innerHTML = "잘바뀌는군!";
+}
+
+// ? tsconfig.json 에서 "strictNullChecks": false  처리하면 된다.
+
+let 링크 = document.querySelector(".link");
+if (링크 instanceof HTMLAnchorElement) {
+  링크.href = "http://www.naver.com";
+}
+
+// HTMLHeadingElement //* <h1> 태그
+// HTMLButtonElement //* <button> 태그
+
+// * 숙제1 버튼을 누르면 이미지가 바뀌기
+let 버튼 = document.querySelector("#button");
+let 이미지 = document.querySelector("#image");
+
+버튼?.addEventListener("click", function () {
+  if (이미지 instanceof HTMLImageElement) {
+    이미지.src = "new.jpg";
+    이미지.alt = "new.jpg";
+  }
+});
+
+let 네이버링크 = document.querySelectorAll(".naver");
+// if (네이버링크 instanceof HTMLAnchorElement) {
+//   네이버링크.href = "http://www.kakao.com";
+// }
+// * 숙제2 네이버링크 3개 전부 href 변경하기
+네이버링크.forEach((a) => {
+  if (a instanceof HTMLAnchorElement) {
+    a.href = "https://kakao.com";
+  }
+});
+
+class Hero {
+  name: string;
+  constructor(a: string) {
+    this.name = a;
+  }
+  함수(a: string) {
+    console.log("안녕" + a);
+  }
+}
+
+let 아이언맨 = new Hero("아이언맨");
+console.log(아이언맨);
+아이언맨.함수("!하세요 아이언맨");
+
+let 베트맨 = new Hero("베트맨");
+console.log(베트맨);
+
+// * 숙제 1
+class Car {
+  name: string;
+  price: number;
+  constructor(a: string, p: number) {
+    this.name = a;
+    this.price = p;
+  }
+  Tax(p: number) {
+    return this.price * 0.1;
+  }
+}
+
+let car1 = new Car("소나타", 3000);
+console.log(car1);
+console.log(car1.Tax(3000));
+
+// * 숙제2 : 파라미터가 string, number가 되면서 타입에 따라 해당하는 배열에 넣어주는 클래스
+
+class Word {
+  num: any;
+  str: any;
+  // ? ...param 스프레드 문법으로 여러개 들어갈 수 있도록 파라미터 설정
+  constructor(...param: any[]) {
+    // ? 숫자만 담을 배열
+    let 숫자들: number[] = [];
+    // ? 문자만 담을 배열
+    let 문자들: string[] = [];
+
+    // ? 파람들을 확인했을 때 문자 혹은 숫자 타입일테고
+    param.forEach((i: string | number) => {
+      // ? 타입이 문자라면 문자들 배열에 넣어준다
+      if (typeof i === "string") {
+        문자들.push(i);
+      }
+      // ? 타입이 숫자라면 숫자들 배열에 넣어준다
+      else {
+        숫자들.push(i);
+      }
+    });
+    // ? constructor 를 따로 정하지 않고 변수 설정하기?
+    this.num = 숫자들;
+    this.str = 문자들;
+  }
+}
+
+let obj = new Word("kim", 3, 5, "park");
+
+console.log(obj.num);
+console.log(obj.str);
+
+// * Object 타입변수 설정하는 두 가지 방법 (type, interface)
+
+type Square = { color: string; width: number };
+
+interface Square2 {
+  color: string;
+  width: number;
+}
+
+let 네모: Square2 = { color: "red", width: 100 };
+
+interface 학생타입 {
+  name: string;
+}
+let 학생: 학생타입 = { name: "code" };
+
+console.log(학생);
+
+interface 선생타입 {
+  name: string;
+  age: number;
+}
+let 선생: 선생타입 = { name: "티쳐", age: 30 };
+
+console.log(선생);
+
+// * interface를 쓰면 extends 로 복사 가능하다!!!
+
+interface Student {
+  name: string;
+}
+
+interface Teacher extends Student {
+  age: number;
+}
+
+// * & 기호 : intersection type 교차기능 , 인터페이스도 쓸 수 있다
+// ! 왼쪽타입도 만족하고 오른쪽 타입도 만족하는(전부 만족하는) 타입이라는 뜻
+// ! type으로 & 쓸때 중복속성이 발생하면 미리 에러가 안나고, 쓸 때 에러난다
+type Animal2 = { name: string };
+type Cat = { age: number } & Animal2;
+
+let 루루: Cat = { name: "LuLu", age: 4 };
+console.log(루루);
+
+// todo: interface 는 중복선언 가능 =>  자동으로 합쳐진다
+// * 외부라이브러리 쓸 때 인터페이스로 추가할 수 있어서 매우 유용
+let 선생인터페이스익스텐즈: Teacher = {
+  name: "윤정쌤",
+  age: 31,
+  nickName: "별명 엘리나",
+};
+console.log(선생인터페이스익스텐즈);
+
+interface Student {
+  nickName: string;
+}
+
+// todo: type은 중복선언 불가능!!!!!
+type Animal3 = { name: string };
+type Dog = Animal3 & { legs: number };
+
+let 뭉뭉이 = { name: "뭉뭉이", legs: 30 };
+console.log(뭉뭉이);
+
+// * type & 중복선언해서 에러만들기
+// type A = {
+//   name: string;
+// };
+
+// type A = {
+//   legs: number;
+// };
+
+// * interface 속성 중복시켜서 에러만들기
+// interface B {
+//   name: string;
+// }
+
+// interface BB extends B {
+//   name: number;
+// }
+
+// * 숙제1
+interface Samsung {
+  brand: string;
+  serialNumber: number;
+  model: string[];
+}
+
+let 상품: Samsung = {
+  brand: "Samsung",
+  serialNumber: 1360,
+  model: ["TV", "phone"],
+};
+
+console.log(상품);
+
+// * 숙제2
+
+interface 장바구니타입 {
+  product: string;
+  price: number;
+}
+
+let 장바구니: 장바구니타입[] = [
+  { product: "청소기", price: 7000 },
+  { product: "삼다수", price: 800 },
+];
+
+console.log(장바구니);
+
+// * 숙제3
+interface 카드 extends 장바구니타입 {
+  card: boolean;
+}
+
+let 청소기: 카드 = {
+  product: "청소기",
+  price: 7000,
+  card: true,
+};
+
+console.log(청소기);
+
+// * 숙제4
+
+interface 오브젝안에함수두개 {
+  plus: (a: number, b: number) => number;
+  minus: (a: number, b: number) => number;
+}
+
+let 계산: 오브젝안에함수두개 = {
+  plus(a, b) {
+    return a + b;
+  },
+  minus(a, b) {
+    return a - b;
+  },
+};
 
 function App() {
   return;
