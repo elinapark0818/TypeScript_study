@@ -366,6 +366,18 @@ let removeDash: RemoveDash = function (x) {
   return Number(result);
 };
 
+function 숙제3함수파라미터넣기(
+  x: string,
+  cutZero: Function,
+  removeDash: Function
+) {
+  let result = cutZero(x);
+  let result2 = removeDash(result);
+  return result2;
+}
+
+숙제3함수파라미터넣기("010-1234-5678", cutZero, removeDash);
+
 function App() {
   return;
 }
