@@ -655,6 +655,12 @@ let 계산: 오브젝안에함수두개 = {
   },
 };
 
+계산.plus(3, 5);
+계산.minus(9, 4);
+console.log(계산);
+console.log(계산.plus(3, 5));
+console.log(계산.minus(9, 4));
+
 function App() {
   return;
 }
