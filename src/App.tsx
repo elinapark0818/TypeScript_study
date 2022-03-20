@@ -661,6 +661,163 @@ console.log(계산);
 console.log(계산.plus(3, 5));
 console.log(계산.minus(9, 4));
 
+// * rest parameter
+
+function 레스트파라미터(...x: any[]) {
+  console.log(x);
+}
+
+레스트파라미터([2, "레스트파라미터"]);
+
+// *destructuring
+
+let [디스트럭쳐1, 디스트럭쳐2] = ["안녕", 100];
+
+console.log(디스트럭쳐1);
+console.log(디스트럭쳐2);
+
+let { student, a } = { student: true, a: 25 };
+console.log("a========", a);
+
+let 오브젝트2 = { student: false, age: 30 };
+
+function 함수디스(a: boolean, b: number) {
+  console.log("a,b===========", a, b);
+}
+
+함수디스(true, 2);
+console.log(
+  "함수디스======",
+  함수디스((오브젝트2.student = true), (오브젝트2.age = 55))
+); //?  undefined 가 나온다
+
+function 함수디스트럭쳐({ student, age }: { student: boolean; age: number }) {
+  console.log(student, age);
+}
+
+함수디스트럭쳐({ student: true, age: 33 });
+
+console.log("오브젝트2=========", 함수디스트럭쳐(오브젝트2)); //? undefined 가 나온다
+
+console.log(
+  "함수디스트럭쳐안에오브젝트===",
+  함수디스트럭쳐({ student: true, age: 40 })
+); //?  undefined 가 나온다
+
+let person = { student: true, age: 20 };
+function 함수person({ student, age }: { student: boolean; age: number }) {
+  console.log(student, age);
+}
+
+함수person({ student: false, age: 11 });
+함수person(person);
+
+// * 숙제1 : 숫자 여러개를 입력하면 최대값을 리턴하는 함수를 만들자
+
+function 숙제1숫자여러개(...num: number[]) {
+  let result = 0;
+  num.forEach((n) => {
+    if (result < n) result = n;
+  });
+  return result;
+}
+
+console.log("최대값====", 숙제1숫자여러개(7, 6, 5, 8, 2, 1));
+
+// * 숙제2 오브젝트 자료를 파라비터로 입력할 수 있는 함수를 만들자
+
+let 유저정보 = { user: "kim", comment: [3, 5, 4], admin: false };
+
+function 유저정보함수({
+  user,
+  comment,
+  admin,
+}: {
+  user: string;
+  comment: number[];
+  admin: boolean;
+}) {
+  console.log(user, comment, admin);
+}
+
+유저정보함수(유저정보);
+
+// *숙제2 답안 : return 타입을 void로 설정해줘야 에러가 안난다?
+// ? void 없어도 에러가 안난다..
+type UserType = {
+  user: string;
+  comment: number[];
+  admin: boolean;
+};
+
+function 유저타입함수({ user, comment, admin }: UserType): void {
+  console.log(user, comment, admin);
+}
+
+유저타입함수({ user: "kim", comment: [3, 5, 4], admin: false });
+
+// * 숙제3 : 함수에 파라미터를 배열형식으로 입력할 수 있는 걸 만들자
+
+// ? 배열안에 숫자나 문자나 불린타입이 들어올 수 있는 타입을 만든다
+type 배열파라미터타입 = (number | string | boolean)[];
+
+// ? 함수의 파라미터 타입을 지정해주고, 파라미터들을 콘솔로그로 찍는 함수를 만든다
+function 배열을파라미터로받는함수([a, b, c, d]: 배열파라미터타입) {
+  console.log(a, b, c, d);
+}
+// ? 함수를 실행해보자
+배열을파라미터로받는함수([40, "wine", false, "되는군"]);
+
+// * typeof 를 사용할 수 없는 네로잉 상황
+// ! && 연산자로 undefined 랑 null 둘다 걸러낼 수 있다
+function 네로잉함수(x: string | undefined) {
+  if (x && typeof x === "string") {
+    console.log(x);
+  }
+}
+
+type Fish = { swim: string };
+type Bird = { fly: string };
+
+// * 속성명 in 오브젝트 자료
+function 물고기와새(animal: Fish | Bird) {
+  if ("swim" in animal) {
+    return (animal.swim = "수영가능");
+  }
+}
+
+물고기와새({ swim: "수영수영 가능가능" });
+
+// * 오브젝트 instanceof 부모Class
+let 날짜 = new Date();
+if (날짜 instanceof Date) {
+}
+
+// * 오브젝트타입마다 literal type 만들어두면 네로잉이 편하다
+
+type 차 = {
+  model: 213;
+  wheel: "4개";
+  color: string;
+};
+type 자전거 = {
+  wheel: "2개";
+  color: string;
+};
+
+function 차와자전거(x: 차 | 자전거) {
+  if (x.wheel === "4개") {
+    console.log("x가 차 타입이다." + x.color);
+  } else {
+    console.log("이 바이크는 " + x.color);
+  }
+}
+
+// * =======================
+// * =======================
+// * =======================
+// * =======================
+// * =======================
 function App() {
   return;
 }
