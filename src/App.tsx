@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 type myType = string | number;
 
 let name: string | number = "elina";
@@ -813,13 +815,330 @@ function 차와자전거(x: 차 | 자전거) {
   }
 }
 
+// * never 타입을 알아보자
+// * return 값이 없어야 한다.
+// * 끝나지 않아야 한다. (= endpoint가 없어야 한다)
+
+function 네버함수(): never {
+  throw new Error(); // 코드 실행이 중단된다
+}
+
+function 네버함수와일(): never {
+  while (true) {}
+}
+
+// * never 어디다 쓰나?  => 자동으로 never타입이 되는경우를 살펴보자
+// ? void 쓰면 된다. never 잘 안쓴다
+
+function 함수네버발생하기(parameter: string) {
+  if (typeof parameter == "string") {
+    console.log(parameter);
+  } else {
+    console.log(parameter); // ? 발생할 수 없는 타입. never 타입이된다.
+  }
+}
+
+// ? never가 발생하면 코드가 어딘가 이상한거다.
+
+let 함수에러발생시키기 = function () {
+  // * 함수타입이 never가 된다.
+  throw new Error();
+};
+
+// ? void 쓰면 된다.
+
+//  * public, private 키워드를 유용하게 사용해보자. class 만들때!
+
+class 유저어 {
+  public name: string;
+  private age = 3;
+  constructor(x: string) {
+    this.name = x;
+    this.age = 3;
+  }
+  public 함수() {}
+}
+
+// todo: public 키워드 써보자
+// ? 있으나 없으나 똑같다.
+// ? public 작성안해도 숨겨져 있는거다!
+
+let 유저1 = new 유저어("파마리터");
+유저1.name = "바꾸기가능";
+
+// todo: private 키워드 써보자
+// ? 값을 바꿀 수 없다.
+// ? class 안에서만 수정,이용 가능하다!
+let 유저2 = new 유저어("프라이베이트");
+// 유저2.age = 3  // * 수정권한이 없따!
+
+class 패밀리 {
+  name: string;
+  private familyName: string = "park";
+  constructor(x: string) {
+    this.name = x + this.familyName;
+  }
+
+  이름변경함수() {
+    this.familyName = "James";
+  }
+}
+
+let 유저3 = new 패밀리("이름아무개");
+console.log("패밀리유저3이름===", 유저3.name);
+// console.log(유저3.familyName); // * 수정못한다
+
+// ! 긴급상황. private 바꿔야 할때
+// ? 클래스 내에 함수를 만들어서 적용시키면 된다
+유저3.이름변경함수();
+
+console.log("패밀리유저3이름변경함수===", 유저3);
+
+// * public 키워드로 축약가능
+class 사람 {
+  constructor(public name: string, public age: number) {}
+}
+
+let 자식 = new 사람("자식이름", 23);
+console.log("자식을출력해라===", 자식);
+
+// * class에서 사용가능한 protected, static 키워드
+
+class 엑스 {
+  protected x: number = 10;
+}
+
+class 뉴엑스 extends 엑스 {
+  doThis() {
+    this.x = 30;
+  }
+}
+
+let 엑스사람 = new 뉴엑스();
+console.log("엑스사람===", 엑스사람);
+
+// * protected 키워드도 class 안에서만 사용 가능하다
+엑스사람.doThis();
+console.log("엑스사람프로텍티드", 엑스사람);
+
+// * static 키워드를 쓰면 부모 class에 직접 부여되서 부모만 쓸 수 있다
+class 엑스엑스 {
+  static x: number = 10;
+  y: number = 20;
+}
+
+let 엑스자식 = new 엑스엑스();
+console.log("자식에게 안물려준다===", 엑스자식.y);
+console.log("부모만 static 쓸수 있다===", 엑스엑스.x);
+// console.log("부모는 y를 못쓴다. 자식만 y사용가능===", 엑스엑스.y); // * extends 하면 잘 물려준다
+
+// * static은 private / protected / public 이랑 함께 사용 가능하다
+
+// ? static 이런걸 언제 씁니까
+// ? 주로 class 안에 간단한 메모를 하거나, 기본 설정값을 입력하거나
+// ? class로 부터 생성되는 object가 사용할 필요가 없는 변수들을 만들어놓고 싶을 때
+
+class 와이 {
+  public static y: number = 123;
+}
+
+let 와이자식 = new 와이();
+console.log(와이.y);
+console.log(와이자식);
+
+class 인트로 {
+  static skill: string = "js";
+  // ? static은 부모만 쓸수 있으므로 {부모.속성} 으로 불러와야 한다
+  intro = 인트로.skill + "전문가입니다.";
+}
+
+let 영수 = new 인트로();
+console.log("js 전문가===", 영수);
+
+인트로.skill = "ts"; // ! 여기 이후로 뽑는 자식들은 static 속성이 변경됨
+
+let 영수2 = new 인트로();
+console.log("ts 전문가===", 영수2);
+
+// ? 숨기고 싶은 속성은 protected, private 쓰는게 낫다
+
+// todo: 숙제1
+
+class 숙제1속성 {
+  // ? private static은 부모 클래스에서만 사용가능하면서 변경하지 않을 값에
+  // ! static이 붙었으니 숙제1속성.x 로 접근할 수 있다. 자식클래스는 접근불가
+  // ! private static x는 숙제1속성 클래스 내부에서만 수정가능하다
+  private static x: number = 10;
+  // ? public static은 부모 클래스에서만 사용할 때
+  // ! public static y는 클래스 내부 외부 상관없이 수정가능하다. public 없어도 가능
+  public static y: number = 20;
+  // ? protected는 부모클래스와 상속받은 자식 클래스에서만 접근 가능
+  // ! extends로 복사한 클래스 내부에서도 사용할 수 있다
+  protected z: number = 30;
+}
+
+// todo: 숙제2
+
+export class 숙제2속성 {
+  private static x: number = 10;
+  public static y: number = 20;
+
+  static addOne(n: number) {
+    숙제2속성.x += n;
+  }
+  static printX() {
+    console.log("x값은 10인데===", 숙제2속성.x);
+  }
+}
+
+숙제2속성.printX();
+숙제2속성.addOne(3);
+숙제2속성.printX();
+숙제2속성.addOne(4);
+숙제2속성.printX();
+
+// todo: 숙제3
+
+class 숙제3Square {
+  // public width: number;
+  // public height: number;
+  // public color: string;
+  constructor(
+    public width: number,
+    public height: number,
+    public color: string
+  ) {
+    // width: 30
+    // height: 30,
+    // color: "red"
+  }
+  draw() {
+    let position = Math.random();
+    let square = `<div style="position:relative;
+    top:${position * 400}px;
+    left:${position * 400}px;
+    width:${this.width}px;
+    height:${this.height}px;
+    background:${this.color};"
+    ></div>`;
+    document.body.insertAdjacentHTML("beforeend", square);
+  }
+}
+
+let 숙제3네모 = new 숙제3Square(30, 30, "orange");
+숙제3네모.draw();
+숙제3네모.draw();
+숙제3네모.draw();
+
+// * Generic 함수 : 파라미터로 타입을 입력하는 함수
+// ? 타입을 파라미터로 함수에 미리 입력하는 방법
+
+function 제네릭<Type>(x: Type[]): Type {
+  return x[0];
+}
+
+let 제네릭a = 제네릭(["unknown타입이다", 2]);
+
+// todo: <number> 라는 타입을 <Type>에 집어넣어주세요
+let 제네릭b = 제네릭<number>([55, 1, 2, 3, 4]);
+console.log("제네릭a===", 제네릭a);
+console.log("제네릭b===100이 잘 나온다", 제네릭b + 45);
+
+let 제네릭c = 제네릭<string>(["앞", "뒤"]);
+console.log("제네릭c===문자더하기", 제네릭c);
+// ? 가끔 타입파라미터를 자동으로 유추하기도 한다...
+
+// * 타입파라미터 제한두기
+// ? extends 복사가 아닌 체크/검사 미리하기 (네로잉 인정)
+
+function 타입제한함수<Type extends number>(x: Type) {
+  return x - 1;
+}
+
+let 타입제한함수적용 = 타입제한함수<number>(100);
+
+console.log("타입제한함수적용===", 타입제한함수적용);
+
+// todo: 인터페이스를 타입제한에 적용하기
+
+interface LengthCheck {
+  length: number;
+}
+
+function 길이는문자나배열<Type extends LengthCheck>(x: Type) {
+  return x.length;
+}
+
+let 길이체크 = 길이는문자나배열<string | string[]>("asdvfw");
+console.log("길이체크===", 길이체크);
+
+//  * (숙제1) 입력값이 문자 or 배열일 때, 자료 갯수를 콘솔창에 출력해주는 함수
+
+function 숙제1함수익스텐션<Type extends string | string[]>(x: Type) {
+  console.log(x.length);
+}
+
+숙제1함수익스텐션<string>("문자");
+숙제1함수익스텐션<string[]>(["z", "x"]);
+
+// * (숙제2) SON 자료를 object { } 자료로 변환을 해서 return 해주는 함수
+
+interface 숙제2Animal {
+  name: string;
+  age: number;
+}
+
+let data = '{"name" : "dog", "age" : 1 }';
+
+function 숙제2함수애니멀제이슨<Type>(x: string): Type {
+  return JSON.parse(x);
+}
+
+let 숙제2함수애니멀파스 = 숙제2함수애니멀제이슨<숙제2Animal>(data);
+console.log(숙제2함수애니멀파스);
+
+// * (숙제3)
+
+class 숙제3파라미터자율<T> {
+  name: T;
+  constructor(a: T) {
+    this.name = a;
+  }
+}
+let 숙제3파라미터자율결과 = new 숙제3파라미터자율<string>("어쩌구");
+
+console.log("string이어야해===", typeof 숙제3파라미터자율결과.name);
+
 // * =======================
 // * =======================
 // * =======================
 // * =======================
 // * =======================
+
+let 디브: JSX.IntrinsicElements["div"] = <div>디브디브디브</div>;
+
+let 박스1: JSX.Element = <div>dd</div>;
+let 버튼1: JSX.Element = <button>dd</button>;
+
+let 박스2: JSX.IntrinsicElements["div"] = React.createElement("div");
+let 버튼2: JSX.IntrinsicElements["button"] = <button></button>;
+
+// ? 컴포넌트 타입지정
+
+function Profile(props: { name: string; age: string }): JSX.Element {
+  return <div>{props.name}프로필</div>;
+}
+
+// ? useState
+// let [user1, setUser1] = useState<string | number>("kim");
+
 function App() {
-  return;
+  return (
+    <div>
+      {디브}
+      <Profile name="철수" age="20" />
+    </div>
+  );
 }
 
 export default App;
