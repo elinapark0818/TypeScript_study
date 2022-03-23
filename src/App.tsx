@@ -1,4 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, 증가 } from "./index";
+import { Dispatch } from "redux";
+
+// ? useState
+// let [user1, setUser1] = useState<string | number>("kim");
+
+// * react-redux 와 타입스크립트 같이 쓰기
+
+import { createSlice, configureStore } from "@reduxjs/toolkit";
+import { Provider } from "react-redux";
 
 type myType = string | number;
 
@@ -1129,14 +1140,51 @@ function Profile(props: { name: string; age: string }): JSX.Element {
   return <div>{props.name}프로필</div>;
 }
 
-// ? useState
-// let [user1, setUser1] = useState<string | number>("kim");
+const 초기값 = { count: 0, user: "kim" };
+
+const counterSlice = createSlice({
+  name: "counter",
+  initialState: 초기값,
+  reducers: {
+    increment(state) {
+      state.count += 1;
+    },
+    decrement(state) {
+      state.count -= 1;
+    },
+    incrementByAmount(state, action: any) {
+      state.count += action.payload;
+    },
+  },
+});
+
+let store = configureStore({
+  reducer: {
+    counter1: counterSlice.reducer,
+  },
+});
+
+//state 타입을 export 해두는건데 나중에 쓸 데가 있음
+// export type RootState = ReturnType<typeof store.getState>;
+
+//수정방법 만든거 export
+export let { increment, decrement, incrementByAmount } = counterSlice.actions;
 
 function App() {
+  const 꺼내온거 = useSelector((state: RootState) => state);
+  const dispatch: Dispatch = useDispatch();
   return (
     <div>
       {디브}
       <Profile name="철수" age="20" />
+      {꺼내온거.counter1.count}
+      <button
+        onClick={() => {
+          dispatch(증가());
+        }}
+      >
+        버튼
+      </button>
     </div>
   );
 }
